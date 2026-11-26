@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Salgsdemo</title>
+  <meta name="description" content="En enkel demoside som viser hvordan en AI-assistent kan flytte informasjon mellom systemer ved hjelp av MCP.">
+  <style>
+    :root {
+      --bg: #0f1420;
+      --bg2: #161d2e;
+      --text: #eef1f7;
+      --muted: #9aa4b8;
+      --accent: #5b8cff;
+      --accent2: #43d3b0;
+      --line: rgba(255, 255, 255, .08);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(1200px 600px at 15% -10%, #1f2b4a 0%, transparent 60%),
+                  radial-gradient(900px 500px at 110% 110%, #123a37 0%, transparent 55%), var(--bg);
+      color: var(--text);
+      display: flex; flex-direction: column; min-height: 100vh;
+    }
+    main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 48px 24px 96px; }
+    .card { max-width: 720px; width: 100%; }
+    .date {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: .95rem; color: var(--muted); letter-spacing: .02em;
+      padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.03);
+    }
+    .date::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent2); box-shadow: 0 0 12px var(--accent2); }
+    h1 {
+      font-size: clamp(2.2rem, 6vw, 3.8rem); line-height: 1.05; margin: 24px 0 20px; letter-spacing: -.02em;
+      background: linear-gradient(90deg, var(--text), #b9c8ff 60%, var(--accent2));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    p { font-size: 1.1rem; line-height: 1.65; color: #cfd6e4; margin: 0 0 16px; }
+    .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 28px 0 32px; }
+    .step { padding: 10px 16px; border-radius: 10px; background: var(--bg2); border: 1px solid var(--line); font-weight: 600; font-size: .95rem; }
+    .arrow { color: var(--accent); font-weight: 700; }
+    .repo {
+      display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text);
+      padding: 12px 18px; border-radius: 10px; background: var(--accent); font-weight: 600;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .repo:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(91,140,255,.35); }
+    .repo svg { width: 20px; height: 20px; fill: currentColor; }
+    .repo-url { display: block; margin-top: 10px; font-size: .85rem; color: var(--muted); word-break: break-all; }
+    .version {
+      position: fixed; right: 16px; bottom: 12px;
+      font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      color: var(--muted); background: rgba(15,20,32,.7); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--line);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="card">
+      <span class="date" id="today">&nbsp;</span>
+      <h1>Velkommen til Demoen</h1>
+      <p>
+        Denne siden er en enkel demonstrasjon av hvordan en AI-assistent kan jobbe på tvers av systemer.
+        Kildekoden og dokumentasjonen ligger åpent på GitHub. Ved hjelp av Model Context Protocol (MCP)
+        kan assistenten lese innholdet der, forstå det, og overføre den relevante informasjonen videre til
+        et annet system, uten at noen trenger å kopiere og lime inn for hånd.
+      </p>
+      <p>
+        Selve siden er bevisst enkel: den viser dagens dato og et versjonsnummer som oppdateres hver gang
+        siden bygges på nytt. Poenget er ikke innholdet, men flyten rundt det.
+      </p>
+      <div class="flow" aria-label="Flyt">
+        <span class="step">GitHub</span><span class="arrow">→</span>
+        <span class="step">AI-assistent</span><span class="arrow">→</span>
+        <span class="step">MCP</span><span class="arrow">→</span>
+        <span class="step">Mottakersystem</span>
+      </div>
+      <a class="repo" href="{{REPO_URL}}" target="_blank" rel="noopener">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        Git-repository
+      </a>
+      <span class="repo-url">{{REPO_URL}}</span>
+    </div>
+  </main>
+  <div class="version" title="Bygget {{BUILD_DATE}} · commit {{COMMIT}}">v{{VERSION}}</div>
+  <script>
+    (function () {
+      var el = document.getElementById('today');
+      function render() {
+        var s = new Date().toLocaleDateString('nb-NO', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        el.textContent = s.charAt(0).toUpperCase() + s.slice(1);
+      }
+      render();
+      setInterval(render, 60000);
+    })();
+  </script>
+</body>
+</html>

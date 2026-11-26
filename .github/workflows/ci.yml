@@ -1,0 +1,36 @@
+name: CI
+
+# Kjører på GitHub sine egne runnere (repoet er public – ingen self-hosted runner).
+# Deploy til produksjon skjer ved at serveren selv henter main (auto-deploy.sh).
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Syntakssjekk
+        run: |
+          node --check server.js
+          sed -n '/<script>/,/<\/script>/p' public/index.html | sed '1d;$d' > /tmp/frontend.js
+          node --check /tmp/frontend.js
+      - name: Bygg image og røyktest
+        run: |
+          set -e
+          docker build -q -t salgsdemo-ci --build-arg APP_VERSION="$(date +%Y.%m.%d).$(git rev-list --count HEAD)" .
+          docker run -d --name salgsdemo-ci salgsdemo-ci
+          for i in $(seq 1 15); do docker exec salgsdemo-ci wget -qO- http://127.0.0.1:3000/healthz && break; sleep 2; done
+          docker exec salgsdemo-ci wget -qO- http://127.0.0.1:3000/ | grep -q "Velkommen til Demoen"
+          docker exec salgsdemo-ci wget -qO- http://127.0.0.1:3000/version.json

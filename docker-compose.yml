@@ -1,0 +1,18 @@
+services:
+  web:
+    build:
+      context: .
+      args:
+        APP_VERSION: ${APP_VERSION:-dev}
+        BUILD_DATE: ${BUILD_DATE:-}
+        GIT_COMMIT: ${GIT_COMMIT:-}
+    container_name: salgsdemo-web
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3023:3000"
+    networks: [default, npm_net]
+
+networks:
+  npm_net:
+    external: true
+    name: nginx-proxy-manager_default
